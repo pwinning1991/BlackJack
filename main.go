@@ -118,37 +118,38 @@ func EndHand(gs GameState) GameState {
 }
 
 func main() {
-	//cards := deck.New(deck.Deck(3), deck.Shuffle)
 	var gs GameState
 	gs = Shuffle(gs)
-	gs = Deal(gs)
-	var input string
-	for gs.State == StatePlayerTurn {
-		fmt.Println("Player:", gs.Player)
-		fmt.Println("Player Score:", gs.Player.Score())
-		fmt.Println("Dealer:", gs.Dealer.DealerString())
-		fmt.Println("What will you do? (h)it, (s)tand")
-		fmt.Scanf("%s\n", &input)
-		switch input {
-		case "h":
-			gs = Hit(gs)
-		case "s":
-			gs = Stand(gs)
-		default:
-			fmt.Println("Invalid option: chose either \"h\" or \"s\"")
+	for i := 0; i < 10; i++ {
+		gs = Deal(gs)
+		var input string
+		for gs.State == StatePlayerTurn {
+			fmt.Println("Player:", gs.Player)
+			fmt.Println("Player Score:", gs.Player.Score())
+			fmt.Println("Dealer:", gs.Dealer.DealerString())
+			fmt.Println("What will you do? (h)it, (s)tand")
+			fmt.Scanf("%s\n", &input)
+			switch input {
+			case "h":
+				gs = Hit(gs)
+			case "s":
+				gs = Stand(gs)
+			default:
+				fmt.Println("Invalid option: chose either \"h\" or \"s\"")
+			}
+
 		}
 
-	}
-
-	for gs.State == StateDealerTurn {
-		if gs.Dealer.Score() <= 16 || (gs.Dealer.Score() == 17 && gs.Dealer.MinScore() != 17) {
-			gs = Hit(gs)
-		} else {
-			gs = Stand(gs)
+		for gs.State == StateDealerTurn {
+			if gs.Dealer.Score() <= 16 || (gs.Dealer.Score() == 17 && gs.Dealer.MinScore() != 17) {
+				gs = Hit(gs)
+			} else {
+				gs = Stand(gs)
+			}
 		}
-	}
 
-	gs = EndHand(gs)
+		gs = EndHand(gs)
+	}
 }
 
 func draw(cards []deck.Card) (deck.Card, []deck.Card) {
